@@ -1,0 +1,61 @@
+from sklearn.preprocessing import StandardScaler
+import numpy as np
+
+def tSNE_DR(df):
+    scale = StandardScaler().fit(df)
+
+    df_scaled = scale.transform(df)
+
+    from sklearn.manifold import TSNE
+
+    n_components = 2
+    tsne = TSNE(n_components)
+    tsne_result = tsne.fit_transform(df_scaled)
+    return tsne_result
+
+def ISOMAP_DR(df):
+    scale = StandardScaler().fit(df)
+
+    df_scaled = scale.transform(df)
+    from sklearn.manifold import Isomap
+
+    isomap = Isomap(n_components=2)
+    isomap_result = isomap.fit_transform(df_scaled)
+    return isomap_result
+
+def PCA_DR(df):
+    from sklearn.decomposition import PCA
+    myscaled = StandardScaler().fit(df)
+
+    mydata_scaled = myscaled.transform(df)
+
+    mdscaled_array = np.array(mydata_scaled)
+    mypca = PCA(n_components=2)
+    pca_result = mypca.fit_transform(mdscaled_array)
+    return pca_result
+
+def SVD_DR(df):
+    scale = StandardScaler().fit(df)
+
+    df_scaled = scale.transform(df)
+
+    from sklearn.decomposition import TruncatedSVD as SVD
+
+    SVD = SVD(n_components=2)
+    SVD_results = SVD.fit(df)
+    SVD_results = SVD.transform(df)
+    return SVD_results
+
+def UMAP_DR(df):
+    import umap
+    myscaled = StandardScaler().fit(df)
+
+    mydata_scaled = myscaled.transform(df)
+
+    mdscaled_array = np.array(mydata_scaled)
+    myUMAP = umap.UMAP(n_neighbors=5, random_state=42).fit(mydata_scaled)
+    return myUMAP
+
+
+
+
