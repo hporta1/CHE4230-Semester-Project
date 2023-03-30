@@ -1,4 +1,7 @@
 from sklearn.preprocessing import StandardScaler
+from sklearn.model_selection import train_test_split
+from sklearn.neural_network import MLPClassifier
+from sklearn import svm
 import numpy as np
 
 def tSNE_DR(df):
@@ -80,10 +83,33 @@ def OPTICS_Clustering(DR_results, min_samp):
 
     return mycluster.labels_
 
-def ANN_():
+'assuming already scaled and read arrays with data for part 3 functions'
+def ANN_(anndata, annlabels):
+    x_trainann, x_testann, y_trainann, y_testann = train_test_split(anndata, annlabels, test_size=0.5, random_state=42)
 
-    return 
+    y_trainann = y_trainann.reshape(-1, 1)
+    y_testann = y_testann.reshape(-1, 1)
 
-def SVM():
+    myANN = MLPClassifier(hidden_layer_sizes=(6, 2))
 
-    return 
+    myANN.fit(x_trainann, y_trainann)
+
+    myANN.predict(x_testann)
+
+    ann_score = myANN.score(x_testann, y_testann)
+
+    return ann_score
+
+def SVM(svmdata, svmlabels):
+    x_trainsvm, x_testsvm, y_trainsvm, y_testsvm = train_test_split(svmdata, svmlabels, test_size=0.5, random_state=42)
+
+    y_trainsvm = y_trainsvm.reshape(-1, 1)
+    y_testsvm = y_testsvm.reshape(-1, 1)
+
+    mysvm = svm.SVC()
+
+    mysvm.fit(x_trainsvm, y_trainsvm)
+
+    svm_score = mysvm.score(x_testsvm, y_testsvm)
+
+    return svm_score
