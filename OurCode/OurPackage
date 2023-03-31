@@ -1,0 +1,115 @@
+from sklearn.preprocessing import StandardScaler
+from sklearn.model_selection import train_test_split
+from sklearn.neural_network import MLPClassifier
+from sklearn import svm
+import numpy as np
+
+def tSNE_DR(df):
+    scale = StandardScaler().fit(df)
+
+    df_scaled = scale.transform(df)
+
+    from sklearn.manifold import TSNE
+
+    n_components = 2
+    tsne = TSNE(n_components)
+    tsne_result = tsne.fit_transform(df_scaled)
+    return tsne_result
+
+def ISOMAP_DR(df):
+    scale = StandardScaler().fit(df)
+
+    df_scaled = scale.transform(df)
+    from sklearn.manifold import Isomap
+
+    isomap = Isomap(n_components=2)
+    isomap_result = isomap.fit_transform(df_scaled)
+    return isomap_result
+
+def PCA_DR(df):
+    from sklearn.decomposition import PCA
+    myscaled = StandardScaler().fit(df)
+
+    mydata_scaled = myscaled.transform(df)
+
+    mdscaled_array = np.array(mydata_scaled)
+    mypca = PCA(n_components=2)
+    pca_result = mypca.fit_transform(mdscaled_array)
+    return pca_result
+
+def SVD_DR(df):
+    scale = StandardScaler().fit(df)
+
+    df_scaled = scale.transform(df)
+
+    from sklearn.decomposition import TruncatedSVD as SVD
+
+    SVD = SVD(n_components=2)
+    SVD_results = SVD.fit(df)
+    SVD_results = SVD.transform(df)
+    return SVD_results
+
+def UMAP_DR(df):
+    import umap
+    myscaled = StandardScaler().fit(df)
+
+    mydata_scaled = myscaled.transform(df)
+
+    mdscaled_array = np.array(mydata_scaled)
+    myUMAP = umap.UMAP(n_neighbors=5, random_state=42).fit(mydata_scaled)
+    return myUMAP
+
+
+def KMEANS_Clustering(DR_results, num_clusters):
+    from sklearn.cluster import KMeans
+    kmeans = KMeans(n_clusters= num_clusters, n_init=4, random_state=42)
+
+    kmeans_result = kmeans.fit_predict(DR_results)
+
+    return kmeans_result
+
+def DBSCAN_Clustering(DR_results, epsilon):
+    from sklearn.cluster import DBSCAN
+    dbscan_model = DBSCAN(eps= epsilon).fit(DR_results)
+
+    dbscan_model.labels_
+
+    return dbscan_model.labels_
+
+def OPTICS_Clustering(DR_results, min_samp):
+    from sklearn.cluster import OPTICS
+    mycluster = OPTICS(min_samples = min_samp).fit(DR_results)
+    mycluster.labels_
+
+    return mycluster.labels_
+
+'assuming already scaled and read arrays with data for part 3 functions'
+def ANN_(anndata, annlabels):
+    x_trainann, x_testann, y_trainann, y_testann = train_test_split(anndata, annlabels, test_size=0.5, random_state=42)
+
+    y_trainann = y_trainann.reshape(-1, 1)
+    y_testann = y_testann.reshape(-1, 1)
+
+    myANN = MLPClassifier(hidden_layer_sizes=(6, 2))
+
+    myANN.fit(x_trainann, y_trainann)
+
+    myANN.predict(x_testann)
+
+    ann_score = myANN.score(x_testann, y_testann)
+
+    return ann_score
+
+def SVM(svmdata, svmlabels):
+    x_trainsvm, x_testsvm, y_trainsvm, y_testsvm = train_test_split(svmdata, svmlabels, test_size=0.5, random_state=42)
+
+    y_trainsvm = y_trainsvm.reshape(-1, 1)
+    y_testsvm = y_testsvm.reshape(-1, 1)
+
+    mysvm = svm.SVC()
+
+    mysvm.fit(x_trainsvm, y_trainsvm)
+
+    svm_score = mysvm.score(x_testsvm, y_testsvm)
+
+    return svm_score
